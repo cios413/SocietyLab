@@ -1,0 +1,106 @@
+:root {
+  --bg: #0f1420;
+  --panel: #1a2233;
+  --panel-2: #222c42;
+  --border: #2e3a55;
+  --text: #e6ebf5;
+  --text-dim: #93a0bd;
+  --accent: #5b8cff;
+  --good: #3ecf8e;
+  --bad: #f0b429;
+  --crisis: #ef476f;
+  font-size: 15px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+}
+
+#app { min-height: 100vh; }
+
+button {
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--panel-2);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 14px;
+  transition: all .15s;
+}
+button:hover { border-color: var(--accent); }
+button:disabled { opacity: .5; cursor: not-allowed; }
+button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+button.danger { border-color: var(--crisis); color: var(--crisis); }
+
+input, select, textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+  font-family: inherit;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); }
+textarea { resize: vertical; min-height: 70px; }
+
+label { display: block; font-size: 13px; color: var(--text-dim); margin-bottom: 4px; }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+@media (max-width: 900px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+.field { margin-bottom: 14px; }
+
+.range-row { display: flex; align-items: center; gap: 10px; }
+.range-row input[type=range] { flex: 1; padding: 0; }
+.range-val { min-width: 36px; text-align: right; color: var(--accent); font-variant-numeric: tabular-nums; }
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+}
+
+.stat-bar { height: 6px; border-radius: 3px; background: var(--bg); overflow: hidden; }
+.stat-bar > div { height: 100%; border-radius: 3px; transition: width .4s; }
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ---------- 打印（导出 PDF）样式 ---------- */
+@media print {
+  body { background: #fff !important; color: #111 !important; font-size: 12px; }
+  .no-print, button, input[type=range], select, textarea, .tabs, .topbar-actions, .mask { display: none !important; }
+  .card {
+    background: #fff !important; border: 1px solid #ccc !important;
+    color: #111 !important; break-inside: avoid; margin-bottom: 12px;
+  }
+  h1, h2, h3, strong, p, span, td, th, li, label { color: #111 !important; }
+  .dim, .dim2, .subtitle, .note, .insight, .traits { color: #555 !important; }
+  .stat-bar { background: #eee !important; border: 1px solid #ccc; }
+  .tag { border: 1px solid #999 !important; background: #f5f5f5 !important; }
+  .event-list, .rounds-log, .turns-table-wrap, .rounds-table-wrap, .turns-wrap { max-height: none !important; overflow: visible !important; }
+  .layout, .grid2, .grid3 { display: block !important; }
+  .side { display: block !important; }
+  table { page-break-inside: auto; }
+  tr { page-break-inside: avoid; }
+  a { text-decoration: none; }
+}
