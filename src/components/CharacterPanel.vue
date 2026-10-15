@@ -63,8 +63,11 @@
 
       <div v-for="c in store.characters" :key="c.id" class="item" :class="{ dead: !c.alive }">
         <div class="item-head">
-          <strong>{{ c.name }} <span v-if="!c.alive" class="tag dead-tag">已死亡</span></strong>
-          <span class="tag">{{ factionName(c.factionId) }}</span>
+          <strong>{{ c.name }} <span v-if="c.turningPoint" class="tag" :class="c.turningPoint === 'hero' ? 'hero-tag' : 'disruptor-tag'">{{ c.turningPoint === 'hero' ? '伟人' : '搅局者' }}</span> <span v-if="!c.alive" class="tag dead-tag">已死亡</span></strong>
+          <div class="item-actions">
+            <span class="tag">{{ factionName(c.factionId) }}</span>
+            <button class="danger small" :aria-label="`删除人物${c.name}`" @click="removeCharacter(c.id)">删除</button>
+          </div>
         </div>
         <p class="dim">{{ c.bio }}</p>
         <div class="mini-stats cols3">
@@ -80,7 +83,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { store, genId } from '../store'
+import { store, genId, saveLocal } from '../store'
 import ExportButton from './ExportButton.vue'
 
 const showFactionForm = ref(false)
@@ -121,6 +124,13 @@ function addCharacter() {
   charForm.value = { name: '', factionId: null, bio: '', ambition: 50, kindness: 50, radicalism: 30 }
   showCharForm.value = false
 }
+
+function removeCharacter(id) {
+  const i = store.characters.findIndex(c => c.id === id)
+  if (i < 0 || !window.confirm(`确定删除人物「${store.characters[i].name}」吗？`)) return
+  store.characters.splice(i, 1)
+  saveLocal()
+}
 </script>
 
 <style scoped>
@@ -131,6 +141,7 @@ h2 { margin: 0; font-size: 16px; }
 .item { border-top: 1px solid var(--border); padding: 12px 0; }
 .item.dead { opacity: .55; }
 .item-head { display: flex; justify-content: space-between; align-items: center; }
+.item-actions { display: flex; align-items: center; gap: 8px; }
 .dim { color: var(--text-dim); font-size: 13px; margin: 6px 0; }
 .traits { font-size: 12px; color: var(--text-dim); margin: 6px 0 0; }
 .mini-stats { display: grid; grid-template-columns: 50px 1fr; gap: 6px 10px; align-items: center; font-size: 12px; color: var(--text-dim); }
@@ -138,4 +149,6 @@ h2 { margin: 0; font-size: 16px; }
 .mini-stats em { font-style: normal; text-align: right; }
 button.small { padding: 3px 10px; font-size: 12px; }
 .dead-tag { color: var(--crisis); border-color: var(--crisis); }
+.hero-tag { color: var(--good); border-color: var(--good); }
+.disruptor-tag { color: var(--crisis); border-color: var(--crisis); }
 </style>

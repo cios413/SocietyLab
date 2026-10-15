@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "node tests/engine.test.mjs"
+    "test": "node tests/engine.test.mjs && node --test tests/turningPoint.test.mjs"
   },
   "dependencies": {
     "echarts": "^5.5.0",

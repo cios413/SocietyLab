@@ -3,6 +3,7 @@ import {
   applyImpact, runEventPhase, updateResources, updateCrises, applyAftermath,
   findCrisis, ensureCrisis
 } from './eventSystem.js'
+import { drawTurningPoint, spawnRuleTurningPoint, maybeSpawnRuleNewcomer, evolveFactions } from './turningPoint.js'
 
 /**
  * 规则推演引擎：每回合根据世界参数、人物属性与事件规则系统推进社会演化。
@@ -13,6 +14,7 @@ import {
  *   3. 人物与事件 —— 人物属性更新与资源驱动的行动；文化/社会事件执行
  *   4. 社会指标   —— 经济/不平等/稳定/文化/幸福/人口更新（原有公式不变）
  *   5. 后续影响   —— 事件 aftermath 逐年结算，记录历史
+ *   6. 人物与阵营 —— 根据社会走势出现关键人物或普通新人物，阵营持续演化
  */
 
 const GOVERNANCE_TRAITS = {
@@ -48,6 +50,12 @@ export function runRuleTurn() {
 
   // --- 5. 后续影响结算 ---
   applyAftermath(ctx)
+
+  // --- 6. 社会转折人物与阵营演化 ---
+  const turningPoint = drawTurningPoint(s, s.history, store.characters, rand01)
+  if (turningPoint) spawnRuleTurningPoint(turningPoint, s)
+  else maybeSpawnRuleNewcomer(s, rand01)
+  evolveFactions(s)
 
   recordHistory()
   return s.events[0]

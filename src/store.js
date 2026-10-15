@@ -44,7 +44,11 @@ export const store = reactive({
 })
 
 let nextId = 100
-export function genId() { return ++nextId }
+export function genId() {
+  // 本地存档恢复后也要避开已存在的人物与阵营 ID。
+  nextId = Math.max(nextId, ...store.factions.map(f => f.id || 0), ...store.characters.map(c => c.id || 0))
+  return ++nextId
+}
 
 // ---------- 社会初始化 ----------
 /**
